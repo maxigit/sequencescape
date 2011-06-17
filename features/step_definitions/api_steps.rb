@@ -22,8 +22,8 @@ def recursive_diff(h1, h2)
 end
 
 def assert_hash_equal(h1, h2, *args)
-  d1 = recursive_diff(h1, h2)
-  d2 = recursive_diff(h2, h1)
+  d1 = sort_arrays(recursive_diff(h1, h2))
+  d2 = sort_arrays(recursive_diff(h2, h1))
   assert_equal(d1,d2, *args)
 end
 
