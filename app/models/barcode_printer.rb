@@ -1,12 +1,18 @@
 class BarcodePrinter < ActiveRecord::Base
+  include Uuid::Uuidable
+
   belongs_to :barcode_printer_type
   validates_presence_of :barcode_printer_type
+
+  named_scope :include_barcode_printer_type, :include => :barcode_printer_type
 
   require 'soap/wsdlDriver'
   require 'barcode_wsdl'
   require 'exception/barcode_exception'
 
-  URL = configatron.barcode_service_url
+  def service_url
+    configatron.barcode_service_url
+  end
 
   def service
     @service ||= self.class.service
