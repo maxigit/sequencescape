@@ -188,21 +188,28 @@ Factory.define :request_without_assets, :parent => :request_with_submission do |
 end
 
 Factory.define :request, :parent => :request_without_assets do |r|
-  # The sample should be setup correctly and the assets should be valid
+  # the sample should be setup correctly and the assets should be valid
   r.after_build do |request|
     request.asset        ||= Factory(:sample_tube)
     request.target_asset ||= Factory(:library_tube)
   end
 end
 
-Factory.define :request_without_item, :class => "Request" do |r|
+Factory.define :request_without_item, :class => "request" do |r|
   r.study         {|pr| pr.association(:study)}
   r.project         {|pr| pr.association(:project)}
   r.user            {|user|     user.association(:user)}
   r.request_type    {|request_type| request_type.association(:request_type)}
   r.workflow        {|workflow| workflow.association(:submission_workflow)}
   r.state           'pending'
-  r.submission      {|submission| submission.association(:submission)}
+  r.after_build { |request| request.submission = Factory::submission(:study => request.study,
+                                                                           :project => request.project,
+                                                                           :user => request.user,
+                                                                           :request_types => [request.request_type.id.to_s],
+                                                                           :workflow => request.workflow
+
+                                                                          )
+  }
 end
 
 Factory.define :request_without_project, :class => "Request" do |r|
