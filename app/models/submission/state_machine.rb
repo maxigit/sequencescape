@@ -35,7 +35,7 @@ module Submission::StateMachine
     def fail_orders!
       # TODO we need to find a cleaner way release
       # book quota and especially not release them twice
-      orders.unbook_quota_available_for_request_types!
+      orders.each(&:unbook_quota_available_for_request_types!)
     end
 
     def unprocessed?
