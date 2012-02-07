@@ -37,6 +37,7 @@ def create_audit_table
   }
   con.execute %Q{
     CREATE TABLE #{database}.assets
+    (update_at DATE, type VARCHAR(10), a VARCHAR(20))
 -- (user VARCHAR(50), updated_at DATE, type VARCHAR(10))
       SELECT assets.*
       FROM assets
@@ -68,7 +69,7 @@ def create_audit_trigger
     FOR EACH ROW
     BEGIN
     INSERT into #{database}.assets
-      SELECT * FROM assets
+      SELECT now(), 'INSERT', 'ti', assets.* FROM assets
       WHERE id = NEW.id;
     END;
   }
